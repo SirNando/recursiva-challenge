@@ -66,7 +66,7 @@ export async function nombresMasComunes(req: Request, res: Response) {
 
   // Devuelvo los N nombres mas comunes
   if (cantidad > 0) {
-    nombres.splice(cantidad)[0];
+    nombres.length = cantidad;
   }
   return res.send(nombres.map(({ nombre }) => nombre));
 }

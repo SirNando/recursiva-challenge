@@ -47,7 +47,7 @@ export async function getJovenesFutbolerosConLaVidaResuelta(
     });
     const cantidad = Number(req.query.cantidad) || 0;
     if (cantidad > 0) {
-      jovenesUniversitariosCasados.splice(cantidad)[0];
+      jovenesUniversitariosCasados.length = cantidad;
     }
     res.send(jovenesUniversitariosCasados);
   }

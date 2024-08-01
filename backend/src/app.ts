@@ -17,6 +17,11 @@ if (cluster.isPrimary) {
 } else {
   const app = express();
 
+  app.use((req, res, next) => {
+    console.log(`Worker ${process.pid} received a request for ${req.url}`);
+    next();
+  });
+
   const superligasRoutes = require("./routes/superligas.routes");
   const equiposRoutes = require("./routes/equipos.routes");
   const cors = require("cors");
