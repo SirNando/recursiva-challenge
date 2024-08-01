@@ -12,24 +12,24 @@ export async function getPromedioEdadPorEquipo(req: Request, res: Response) {
   }
 
   let promedioEdad = 0,
-    edadMin,
-    edadMax;
+    minEdad,
+    maxEdad;
   for (const miembro of miembrosEquipo) {
     promedioEdad += Number(miembro.edad);
 
-    if (edadMin === undefined || miembro.edad < edadMin) {
-      edadMin = miembro.edad;
+    if (minEdad === undefined || miembro.edad < minEdad) {
+      minEdad = miembro.edad;
     }
 
-    if (edadMax === undefined || miembro.edad > edadMax) {
-      edadMax = miembro.edad;
+    if (maxEdad === undefined || miembro.edad > maxEdad) {
+      maxEdad = miembro.edad;
     }
   }
   promedioEdad /= miembrosEquipo.length;
   res.send({
-    promedio: Math.floor(promedioEdad),
-    minima: edadMin,
-    maxima: edadMax,
+    promedioEdad: Math.floor(promedioEdad),
+    minEdad,
+    maxEdad,
   });
 }
 

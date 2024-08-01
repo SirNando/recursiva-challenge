@@ -19,7 +19,9 @@ if (cluster.isPrimary) {
 
   const superligasRoutes = require("./routes/superligas.routes");
   const equiposRoutes = require("./routes/equipos.routes");
+  const cors = require("cors");
 
+  app.use(cors());
   app.use(superligasRoutes);
   app.use(equiposRoutes);
 
