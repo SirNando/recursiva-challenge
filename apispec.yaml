@@ -1,0 +1,162 @@
+openapi: 3.0.0
+info:
+  title: SuperLiga challenge
+  summary: API para cargar SuperLigas y pedir reportes acordes al challenge
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000/
+paths:
+  /superligas:
+    get:
+      summary: Obtiene equipos de la superliga
+      responses:
+        200:
+          description: Lista de los equipos en la superliga
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        404:
+          $ref: "#/components/responses/NotFound"
+    post:
+      summary: Carga una nueva superliga a la base
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Archivo CSV que define una SuperLiga
+      responses:
+        202:
+          description: Archivo recibido y guardado
+        400:
+          description: No se recibió el archivo
+  /superligas/poblacion:
+    get:
+      summary: Obtiene el número de población de la superliga
+      responses:
+        200:
+          description: Población de la SuperLiga
+          content:
+            application/json:
+              schema:
+                type: integer
+        404:
+          $ref: "#/components/responses/NotFound"
+  /superligas/jovenesFutbolerosConLaVidaResuelta:
+    get:
+      description: |
+        Obtiene las N personas mas jovenes de la superliga casadas con estudios universitarios.
+        Si no se especifica, devuelve el ranking completo
+      parameters:
+        - in: query
+          name: cantidad
+          schema:
+            type: integer
+          description: Cuantas personas mostrar
+      responses:
+        200:
+          description: Lista de las personas que cumplen la condición
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Miembro"
+        404:
+          $ref: "#/components/responses/NotFound"
+  /equipos/{equipoId}/promedioEdad:
+    get:
+      description: Obtiene el promedio de la edad de los miembros del equipo de la superliga, y la edad minima/maxima registrada
+      parameters:
+        - $ref: "#/components/parameters/equipoId"
+      responses:
+        200:
+          description: Población del equipo de la SuperLiga
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  promedioEdad:
+                    type: number
+                  minEdad:
+                    type: integer
+                  maxEdad:
+                    type: integer
+        404:
+          $ref: "#/components/responses/NotFound"
+  /equipos/{equipoId}/nombresMasComunes:
+    get:
+      description: |
+        Obtiene los N nombres mas comunes del equipo de la superliga.
+        Si no se especifica, devuelve el ranking completo
+      parameters:
+        - $ref: "#/components/parameters/equipoId"
+        - in: query
+          name: cantidad
+          required: true
+          description: Cantidad de jugadores
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        200:
+          description: Lista de los nombres mas comunes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+        404:
+          $ref: "#/components/responses/NotFound"
+
+components:
+  parameters:
+    equipoId:
+      name: equipoId
+      in: path
+      required: true
+      description: nombre del equipo
+      schema:
+        type: string
+  responses:
+    NotFound:
+      description: SuperLiga o equipo no encontrados
+  schemas:
+    SuperLiga:
+      type: object
+      properties:
+        equipos:
+          type: array
+          items:
+            type: string
+    Miembro:
+      type: object
+      properties:
+        nombre:
+          type: string
+        edad:
+          type: integer
+        equipo:
+          type: string
+          example: Boca
+        estadoCivil:
+          type: string
+          enum:
+            - soltero
+            - casado
+        estudios:
+          type: string
+          enum:
+            - secundario
+            - terciario
+            - universitario
