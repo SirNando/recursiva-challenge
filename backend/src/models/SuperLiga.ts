@@ -2,14 +2,6 @@ import { parse } from "csv-parse";
 import fs from "fs";
 import path from "path";
 
-type Miembro = {
-  nombre: string;
-  edad: number;
-  equipo: string;
-  estadoCivil: "Casado" | "Soltero";
-  estudios: "Universitario" | "Secundario" | "Terciario";
-};
-
 export class SuperLiga {
   private static getFilePaths() {
     return path.join(__dirname, "..", "db", "superliga.csv");
