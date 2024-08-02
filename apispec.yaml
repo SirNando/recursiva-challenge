@@ -11,13 +11,18 @@ paths:
       summary: Obtiene equipos de la superliga
       responses:
         200:
-          description: Lista de los equipos en la superliga
+          description: Lista de los equipos en la superliga con su cantidad de miembros
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  type: string
+                  type: object
+                  properties:
+                    equipo:
+                      type: string
+                    miembros:
+                      type: integer
         404:
           $ref: "#/components/responses/NotFound"
     post:
@@ -38,6 +43,29 @@ paths:
           description: Archivo recibido y guardado
         400:
           description: No se recibió el archivo
+  /superligas/promedioEdades:
+    get:
+      summary: Obtiene el promedio de las edades, maxima y minima de cada equipo de la liga de mayor a menor
+      responses:
+        200:
+          description: Lista de los equipos en la superliga con su cantidad de miembros
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    equipo:
+                      type: string
+                    promedioEdad:
+                      type: string
+                    minEdad:
+                      type: string
+                    maxEdad:
+                      type: string
+        404:
+          $ref: "#/components/responses/NotFound"
   /superligas/poblacion:
     get:
       summary: Obtiene el número de población de la superliga

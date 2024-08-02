@@ -1,35 +1,89 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { FormEvent, useState } from "react";
+import BentoBox from "./components/BentoBox";
+import BentoItem from "./components/BentoItem";
+import BentoLoader from "./components/BentoLoader";
+import {
+  jovenesVidaResueltaRenderer,
+  nombresMasComunesDeEquipoRenderer,
+  poblacionTotalRenderer,
+  promedioEdadEquipoRenderer,
+} from "./util/renderers";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append("superliga", event.currentTarget["superliga"].files[0]);
+
+    const serverReply = await fetch("http://localhost:3000/superligas", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (serverReply.ok) {
+      setUploadSuccess(true);
+    }
+    console.log(serverReply);
+  }
+
+  const requestObjects = {
+    poblacionLink: {
+      url: "http://localhost:3000/superligas/poblacion",
+    },
+    promedioEdadEquipoLink: {
+      url: "http://localhost:3000/equipos/Racing/promedioEdad",
+    },
+    jovenesVidaResueltaLink: {
+      url: "http://localhost:3000/superligas/jovenesFutbolerosConLaVidaResuelta?cantidad=100",
+    },
+    nombresComunesEquipoLink: {
+      url: "http://localhost:3000/equipos/River/nombresMasComunes?cantidad=5",
+    },
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
+      <nav>
+        <a href="#">
+          <img src="" alt="Logo recursiva" />
         </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      </nav>
+      <BentoBox>
+        <BentoLoader title="Cargar archivo">
+          <form onSubmit={handleSubmit}>
+            <input type="file" name="superliga" />
+            <button type="submit">Cargar</button>
+          </form>
+        </BentoLoader>
+        {uploadSuccess && (
+          <>
+            <BentoItem
+              title="Poblacion total"
+              fetchLink={requestObjects.poblacionLink}
+              render={poblacionTotalRenderer}
+            />
+            <BentoItem
+              title="Promedio edad de socios de Racing"
+              fetchLink={requestObjects.promedioEdadEquipoLink}
+              render={promedioEdadEquipoRenderer}
+            />
+            <BentoItem
+              title="Jovenes con la vida resuelta"
+              fetchLink={requestObjects.jovenesVidaResueltaLink}
+              render={jovenesVidaResueltaRenderer}
+            />
+            <BentoItem
+              title="Nombres mas comunes de River"
+              fetchLink={requestObjects.nombresComunesEquipoLink}
+              render={nombresMasComunesDeEquipoRenderer}
+            />
+          </>
+        )}
+      </BentoBox>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

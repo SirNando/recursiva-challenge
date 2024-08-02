@@ -6,6 +6,7 @@ import {
   getEquipos,
   getPoblacion,
   getJovenesFutbolerosConLaVidaResuelta,
+  getEdadesPromedios,
 } from "../controllers/superligas.controller";
 
 const dbPath = path.join(__dirname, "..", "db");
@@ -15,6 +16,8 @@ const router = express.Router();
 router.post("/superligas", upload.single("superliga"), cargarLiga);
 
 router.get("/superligas", getEquipos);
+
+router.get("/superligas/promedioEdades", getEdadesPromedios);
 
 router.get("/superligas/poblacion", getPoblacion);
 
