@@ -105,4 +105,37 @@ export class SuperLiga {
 
     return population;
   }
+
+  public static async getTeamAgeAverage(team: string) {
+    const miembrosEquipo = await SuperLiga.getMembers((miembro) => {
+      return miembro.equipo === team;
+    });
+
+    if (miembrosEquipo.length === 0) {
+      return null;
+    }
+
+    let promedioEdad = 0,
+      minEdad,
+      maxEdad;
+    for (const miembro of miembrosEquipo) {
+      promedioEdad += Number(miembro.edad);
+
+      if (minEdad === undefined || miembro.edad < minEdad) {
+        minEdad = miembro.edad;
+      }
+
+      if (maxEdad === undefined || miembro.edad > maxEdad) {
+        maxEdad = miembro.edad;
+      }
+    }
+
+    promedioEdad /= miembrosEquipo.length;
+
+    return {
+      promedioEdad: Math.floor(promedioEdad),
+      minEdad,
+      maxEdad,
+    };
+  }
 }

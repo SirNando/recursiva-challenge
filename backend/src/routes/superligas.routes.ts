@@ -6,7 +6,7 @@ import {
   getEquipos,
   getPoblacion,
   getJovenesFutbolerosConLaVidaResuelta,
-  getEdadesPromedios,
+  getPromedioEdades,
 } from "../controllers/superligas.controller";
 
 const dbPath = path.join(__dirname, "..", "db");
@@ -17,7 +17,7 @@ router.post("/superligas", upload.single("superliga"), cargarLiga);
 
 router.get("/superligas", getEquipos);
 
-router.get("/superligas/promedioEdades", getEdadesPromedios);
+router.get("/superligas/promedioEdades", getPromedioEdades);
 
 router.get("/superligas/poblacion", getPoblacion);
 

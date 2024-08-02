@@ -40,7 +40,7 @@ export async function getPoblacion(req: Request, res: Response) {
   }
 }
 
-export async function getEdadesPromedios(req: Request, res: Response) {
+export async function getPromedioEdades(req: Request, res: Response) {
   const teams = await SuperLiga.getTeams();
   if (teams.length === 0) {
     return res.status(404).send("No hay personas registradas");
@@ -48,50 +48,34 @@ export async function getEdadesPromedios(req: Request, res: Response) {
 
   let promedioEdadesPorEquipo = [];
   for (const team of teams) {
-    const miembrosEquipo = await SuperLiga.getMembers((miembro) => {
-      return miembro.equipo === team;
-    });
+    const promedioEdadEquipo = await SuperLiga.getTeamAgeAverage(team);
 
-    if (miembrosEquipo.length === 0) {
-      return res.status(404).send("No hay miembros del equipo");
+    if (promedioEdadEquipo === null) {
+      continue;
     }
-
-    let promedioEdad = 0,
-      minEdad,
-      maxEdad;
-    for (const miembro of miembrosEquipo) {
-      promedioEdad += Number(miembro.edad);
-
-      if (minEdad === undefined || miembro.edad < minEdad) {
-        minEdad = miembro.edad;
-      }
-
-      if (maxEdad === undefined || miembro.edad > maxEdad) {
-        maxEdad = miembro.edad;
-      }
-    }
-    promedioEdad /= miembrosEquipo.length;
 
     promedioEdadesPorEquipo.push({
+      ...promedioEdadEquipo,
       equipo: team,
-      cantidadMiembros: miembrosEquipo.length,
-      promedioEdad: Math.floor(promedioEdad),
-      minEdad,
-      maxEdad,
+      cantidadMiembros: team.length,
     });
   }
-  const finalResponse = promedioEdadesPorEquipo
-    .sort((a, b) => {
-      return b.cantidadMiembros - a.cantidadMiembros;
-    })
-    .map((element) => {
-      return {
-        equipo: element.equipo,
-        minEdad: element.minEdad,
-        maxEdad: element.maxEdad,
-      };
-    });
-  res.send(finalResponse);
+
+  // ordeno de mayor a menor cantidad de miembros, y remuevo la cantidad de miembros
+  res.send(
+    promedioEdadesPorEquipo
+      .sort((a, b) => {
+        return b.cantidadMiembros - a.cantidadMiembros;
+      })
+      .map((element) => {
+        return {
+          equipo: element.equipo,
+          promedioEdad: element.promedioEdad,
+          minEdad: element.minEdad,
+          maxEdad: element.maxEdad,
+        };
+      })
+  );
 }
 
 export async function getJovenesFutbolerosConLaVidaResuelta(

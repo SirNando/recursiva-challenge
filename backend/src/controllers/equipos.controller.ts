@@ -3,34 +3,11 @@ import { Request, Response } from "express";
 
 export async function getPromedioEdadPorEquipo(req: Request, res: Response) {
   const equipo = req.params.equipo;
-  const miembrosEquipo = await SuperLiga.getMembers((miembro) => {
-    return miembro.equipo === equipo;
-  });
-
-  if (miembrosEquipo.length === 0) {
-    return res.status(404).send("No hay miembros del equipo");
+  if (!equipo) {
+    return res.status(400).send("Falta el nombre del equipo");
   }
 
-  let promedioEdad = 0,
-    minEdad,
-    maxEdad;
-  for (const miembro of miembrosEquipo) {
-    promedioEdad += Number(miembro.edad);
-
-    if (minEdad === undefined || miembro.edad < minEdad) {
-      minEdad = miembro.edad;
-    }
-
-    if (maxEdad === undefined || miembro.edad > maxEdad) {
-      maxEdad = miembro.edad;
-    }
-  }
-  promedioEdad /= miembrosEquipo.length;
-  res.send({
-    promedioEdad: Math.floor(promedioEdad),
-    minEdad,
-    maxEdad,
-  });
+  res.send(await SuperLiga.getTeamAgeAverage(equipo));
 }
 
 export async function nombresMasComunes(req: Request, res: Response) {
