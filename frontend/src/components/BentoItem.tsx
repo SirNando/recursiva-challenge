@@ -3,12 +3,12 @@ import useFetch from "../hooks/useFetch";
 
 export default function BentoItem({
   title,
-  fetchLink,
+  requests,
   render,
 }: BentoItemProps): ReactNode {
-  const { data } = useFetch(fetchLink.url, fetchLink.options);
+  const { data } = useFetch(requests);
 
-  if (!data) {
+  if (data.length === 0) {
     return <p>Cargando datos...</p>;
   } else {
     return (

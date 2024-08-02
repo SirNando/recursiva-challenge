@@ -3,10 +3,7 @@ export {};
 declare global {
   type BentoItemProps = {
     title: string;
-    fetchLink: {
-      url: string;
-      options?: RequestInit;
-    };
+    requests: FetchOptions | FetchOptions[];
     render: (data: any) => ReactElement; // gets fetched data and renders html using it
   };
 
@@ -16,5 +13,10 @@ declare global {
     equipo: string;
     estadoCivil: "Casado" | "Soltero";
     estudios: "Universitario" | "Secundario" | "Terciario";
+  };
+
+  type FetchOptions = {
+    url: string;
+    options?: RequestInit;
   };
 }

@@ -3,6 +3,7 @@ import BentoBox from "./components/BentoBox";
 import BentoItem from "./components/BentoItem";
 import BentoLoader from "./components/BentoLoader";
 import {
+  promedioEdadesRenderer,
   jovenesVidaResueltaRenderer,
   nombresMasComunesDeEquipoRenderer,
   poblacionTotalRenderer,
@@ -25,22 +26,24 @@ function App() {
     if (serverReply.ok) {
       setUploadSuccess(true);
     }
-    console.log(serverReply);
   }
 
   const requestObjects = {
     poblacionLink: {
       url: "http://localhost:3000/superligas/poblacion",
-    },
+    } as FetchOptions,
     promedioEdadEquipoLink: {
       url: "http://localhost:3000/equipos/Racing/promedioEdad",
-    },
+    } as FetchOptions,
     jovenesVidaResueltaLink: {
       url: "http://localhost:3000/superligas/jovenesFutbolerosConLaVidaResuelta?cantidad=100",
-    },
+    } as FetchOptions,
     nombresComunesEquipoLink: {
       url: "http://localhost:3000/equipos/River/nombresMasComunes?cantidad=5",
-    },
+    } as FetchOptions,
+    promedioEdadesLink: {
+      url: "http://localhost:3000/superligas/promedioEdades",
+    } as FetchOptions,
   };
 
   return (
@@ -61,23 +64,28 @@ function App() {
           <>
             <BentoItem
               title="Poblacion total"
-              fetchLink={requestObjects.poblacionLink}
+              requests={requestObjects.poblacionLink}
               render={poblacionTotalRenderer}
             />
             <BentoItem
               title="Promedio edad de socios de Racing"
-              fetchLink={requestObjects.promedioEdadEquipoLink}
+              requests={requestObjects.promedioEdadEquipoLink}
               render={promedioEdadEquipoRenderer}
             />
             <BentoItem
               title="Jovenes con la vida resuelta"
-              fetchLink={requestObjects.jovenesVidaResueltaLink}
+              requests={requestObjects.jovenesVidaResueltaLink}
               render={jovenesVidaResueltaRenderer}
             />
             <BentoItem
               title="Nombres mas comunes de River"
-              fetchLink={requestObjects.nombresComunesEquipoLink}
+              requests={requestObjects.nombresComunesEquipoLink}
               render={nombresMasComunesDeEquipoRenderer}
+            />
+            <BentoItem
+              title="Promedio de edades por equipo, de mayor a menor"
+              requests={requestObjects.promedioEdadesLink}
+              render={promedioEdadesRenderer}
             />
           </>
         )}
