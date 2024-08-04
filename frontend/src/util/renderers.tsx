@@ -43,19 +43,17 @@ export function jovenesVidaResueltaRenderer(data: any[]) {
 
 export function nombresMasComunesDeEquipoRenderer(data: any[]) {
   return (
-    <ul>
+    <ol>
       {data[0].map((nombre: string, key: number) => (
         <li key={key}>
           {key + 1}. {nombre}
         </li>
       ))}
-    </ul>
+    </ol>
   );
 }
 
 export function promedioEdadesRenderer(data: any[]) {
-  console.log(data[0]);
-
   return (
     <ul>
       {data[0].map((info: any, key: number) => (

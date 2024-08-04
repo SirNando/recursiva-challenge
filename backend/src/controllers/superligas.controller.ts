@@ -7,12 +7,29 @@ export async function cargarLiga(req: Request, res: Response) {
     return res.status(400).send("No se recibió archivo");
   }
 
-  SuperLiga.saveLiga();
-  res.status(202).send("File received");
+  let result;
+  try {
+    result = await SuperLiga.saveLiga();
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("No se pudo cargar el archivo:" + err);
+  }
+
+  if (!result) {
+    return res.status(500).send("No se pudo cargar archivo");
+  }
+
+  res.status(202).send("Archivo recibido correctamente");
 }
 
 export async function getEquipos(req: Request, res: Response) {
-  const teams = await SuperLiga.getTeams();
+  let teams;
+  try {
+    teams = await SuperLiga.getTeams();
+  } catch (err) {
+    return res.status(500).send("Error obtener equipos:" + err);
+  }
+
   if (teams.length === 0) {
     res.status(404).send("No hay equipos registrados");
   } else {
@@ -32,7 +49,13 @@ export async function getEquipos(req: Request, res: Response) {
 }
 
 export async function getPoblacion(req: Request, res: Response) {
-  const poblacion = await SuperLiga.getPopulation();
+  let poblacion;
+  try {
+    poblacion = await SuperLiga.getPopulation();
+  } catch (err) {
+    return res.status(500).send("Error al obtener población:" + err);
+  }
+
   if (poblacion === 0) {
     res.status(404).send("No hay superligas registradas");
   } else {
@@ -41,7 +64,13 @@ export async function getPoblacion(req: Request, res: Response) {
 }
 
 export async function getPromedioEdades(req: Request, res: Response) {
-  const teams = await SuperLiga.getTeams();
+  let teams;
+  try {
+    teams = await SuperLiga.getTeams();
+  } catch (err) {
+    return res.status(500).send("Error al obtener promeido de edades:" + err);
+  }
+
   if (teams.length === 0) {
     return res.status(404).send("No hay personas registradas");
   }
@@ -82,11 +111,18 @@ export async function getJovenesFutbolerosConLaVidaResuelta(
   req: Request,
   res: Response
 ) {
-  const jovenesUniversitariosCasados = await SuperLiga.getMembers((miembro) => {
-    return (
-      miembro.estudios === "Universitario" && miembro.estadoCivil === "Casado"
-    );
-  });
+  let jovenesUniversitariosCasados;
+  try {
+    jovenesUniversitariosCasados = await SuperLiga.getMembers((miembro) => {
+      return (
+        miembro.estudios === "Universitario" && miembro.estadoCivil === "Casado"
+      );
+    });
+  } catch (err) {
+    return res
+      .status(500)
+      .send("Error al obtener jovenes universitarios casados:" + err);
+  }
 
   if (jovenesUniversitariosCasados.length === 0) {
     res.status(404).send("No hay personas registradas");

@@ -1,0 +1,15 @@
+.mainNavigation {
+  background-color: #ffffff;
+  height: 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.mainNavigation a {
+  height: 100%;
+}
+
+.mainNavigation img {
+  height: 100%;
+  width: auto;
+}

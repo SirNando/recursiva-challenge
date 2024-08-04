@@ -10,10 +10,15 @@ import {
   promedioEdadEquipoRenderer,
 } from "./util/renderers";
 
+import appStyles from "./App.module.css";
+import logo from "/logo.jpg";
+
 function App() {
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [error, setError] = useState(false);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    setUploadSuccess(false);
     event.preventDefault();
     const formData = new FormData();
     formData.append("superliga", event.currentTarget["superliga"].files[0]);
@@ -23,9 +28,11 @@ function App() {
       body: formData,
     });
 
-    if (serverReply.ok) {
-      setUploadSuccess(true);
+    if (!serverReply.ok) {
+      setError(true);
+      return;
     }
+    setUploadSuccess(true);
   }
 
   const requestObjects = {
@@ -48,9 +55,9 @@ function App() {
 
   return (
     <>
-      <nav>
+      <nav className={appStyles.mainNavigation}>
         <a href="#">
-          <img src="" alt="Logo recursiva" />
+          <img src={logo} alt="Logo recursiva" />
         </a>
       </nav>
       <BentoBox>
@@ -58,6 +65,9 @@ function App() {
           <form onSubmit={handleSubmit}>
             <input type="file" name="superliga" />
             <button type="submit">Cargar</button>
+            {error && !uploadSuccess && (
+              <p>Ocurrió un error al cargar el archivo</p>
+            )}
           </form>
         </BentoLoader>
         {uploadSuccess && (

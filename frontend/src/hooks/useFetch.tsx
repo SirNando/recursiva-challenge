@@ -2,8 +2,17 @@ import { useEffect, useState } from "react";
 
 export default function useFetch(requests: FetchOptions | FetchOptions[]) {
   const [data, setData] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [refetchCount, setRefetchCount] = useState(0);
+
+  function refetch() {
+    setRefetchCount((prevCount) => prevCount + 1);
+    setError(null);
+  }
 
   useEffect(() => {
+    setIsLoading(true);
     (async () => {
       const requestList = Array.isArray(requests) ? requests : [requests];
 
@@ -13,18 +22,25 @@ export default function useFetch(requests: FetchOptions | FetchOptions[]) {
             const response = await fetch(url, options);
 
             if (!response.ok) {
-              return null;
+              throw new Error(response.statusText);
+            } else {
+              return await response.json();
             }
-
-            return await response.json();
           })
         );
         setData(responses);
       } catch (error) {
-        console.log(error);
+        if (error instanceof Error) {
+          console.error(error);
+          setError(error.message);
+        } else {
+          console.error("An unexpected error occurred");
+        }
+      } finally {
+        setIsLoading(false);
       }
     })();
-  }, [requests]);
+  }, [requests, refetchCount]);
 
-  return { data };
+  return { data, error, isLoading, refetch };
 }

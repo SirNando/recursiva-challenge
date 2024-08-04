@@ -7,7 +7,14 @@ export async function getPromedioEdadPorEquipo(req: Request, res: Response) {
     return res.status(400).send("Falta el nombre del equipo");
   }
 
-  res.send(await SuperLiga.getTeamAgeAverage(equipo));
+  let promedioEdad;
+  try {
+    promedioEdad = await SuperLiga.getTeamAgeAverage(equipo);
+  } catch (err) {
+    return res.status(500).send("Error al obtener promedio de edades:" + err);
+  }
+
+  res.send(promedioEdad);
 }
 
 export async function nombresMasComunes(req: Request, res: Response) {
@@ -15,9 +22,14 @@ export async function nombresMasComunes(req: Request, res: Response) {
   const cantidad = Number(req.query.cantidad) || 0;
 
   // Primero busco lista de miembros del equipo
-  const miembrosEquipo = await SuperLiga.getMembers((miembro) => {
-    return miembro.equipo === equipo;
-  });
+  let miembrosEquipo;
+  try {
+    miembrosEquipo = await SuperLiga.getMembers((miembro) => {
+      return miembro.equipo === equipo;
+    });
+  } catch (err) {
+    return res.status(500).send("Error al obtener miembros del equipo:" + err);
+  }
 
   if (miembrosEquipo.length === 0) {
     return res.status(404).send("No hay miembros del equipo");
