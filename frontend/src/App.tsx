@@ -12,6 +12,7 @@ import {
 
 import appStyles from "./App.module.css";
 import logo from "/logo.jpg";
+import addFileIcon from "/add-file-icon.svg";
 
 let firstTime = true;
 
@@ -78,22 +79,26 @@ function App() {
               : "Cargar archivo"
           }
         >
-          <form onSubmit={handleSubmit}>
-            <div>
+          <form onSubmit={handleSubmit} className={appStyles.form}>
+            <div className={appStyles.imageUpload}>
+              <label htmlFor="superliga">
+                <img src={addFileIcon} />
+              </label>
+              <label htmlFor="superliga">Agregar</label>
               <input
                 type="file"
                 accept=".csv"
                 name="superliga"
                 id="superliga"
               />
-              <button type="submit" disabled={isLoading}>
-                {(!isLoading && uploadSuccess) || (!isLoading && error)
-                  ? "Volver a cargar"
-                  : isLoading && !error
-                  ? "Cargando..."
-                  : "Cargar"}
-              </button>
             </div>
+            <button type="submit" disabled={isLoading}>
+              {(!isLoading && uploadSuccess) || (!isLoading && error)
+                ? "Volver a cargar"
+                : isLoading && !error
+                ? "Cargando..."
+                : "Cargar"}
+            </button>
           </form>
         </BentoLoader>
         {uploadSuccess && (

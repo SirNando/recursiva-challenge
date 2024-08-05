@@ -13,3 +13,30 @@
   height: 100%;
   width: auto;
 }
+
+.form input {
+  display: none;
+}
+
+.form img {
+  height: 100%;
+  scale: 1.5;
+  width: auto;
+}
+
+.imageUpload {
+  display: flex;
+  align-items: center;
+}
+
+.form label {
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  gap: 2rem;
+}
+@media only screen and (min-width: 992px) {
+  
+}
