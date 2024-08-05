@@ -92,18 +92,9 @@ export async function getPromedioEdades(req: Request, res: Response) {
 
   // ordeno de mayor a menor cantidad de miembros, y remuevo la cantidad de miembros
   res.send(
-    promedioEdadesPorEquipo
-      .sort((a, b) => {
-        return b.cantidadMiembros - a.cantidadMiembros;
-      })
-      .map((element) => {
-        return {
-          equipo: element.equipo,
-          promedioEdad: element.promedioEdad,
-          minEdad: element.minEdad,
-          maxEdad: element.maxEdad,
-        };
-      })
+    promedioEdadesPorEquipo.sort((a, b) => {
+      return b.cantidadMiembros - a.cantidadMiembros;
+    })
   );
 }
 

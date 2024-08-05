@@ -1,6 +1,5 @@
 import express from "express";
 import cluster from "cluster";
-import os from "os";
 import { cpus } from "os";
 import { argv } from "process";
 
@@ -25,14 +24,19 @@ app.use(equiposRoutes);
 
 if (useClusters) {
   if (cluster.isPrimary) {
-    // Crear worker pool
+    // Create worker pool
     for (let i = 0; i < logicalCores; i++) {
       cluster.fork();
     }
 
     cluster.on("exit", (worker) => {
       console.log(`Worker ${worker.process.pid} died. Restarting...`);
-      cluster.fork();
+      const newWorker = cluster.fork();
+      console.log(`Worker ${newWorker.process.pid} started`);
+    });
+  } else {
+    app.listen(3000, () => {
+      console.log(`Worker ${process.pid} started and listening on port 3000`);
     });
   }
 } else {
