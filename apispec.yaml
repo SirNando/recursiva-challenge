@@ -58,6 +58,8 @@ paths:
                   properties:
                     equipo:
                       type: string
+                    cantidadMiembros:
+                      type: integer
                     promedioEdad:
                       type: string
                     minEdad:
