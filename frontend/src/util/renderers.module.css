@@ -1,0 +1,32 @@
+.shared li {
+  padding: 0.5rem 0;
+}
+
+.shared p {
+  margin: 0;
+}
+
+/* Promedio edades */
+.promedioEdades li p:first-child {
+  font-weight: bold;
+}
+
+.promedioEdades li p span {
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+/* Jovenes con la vida resuelta */
+.jovenesVidaResuelta {
+  width: 100%;
+}
+
+.jovenesVidaResuelta tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Promedio edad equipo */
+.promedioEdadEquipo p span {
+  font-weight: bold;
+}

@@ -13,6 +13,8 @@
   background-color: #ffffff;
   padding: 1rem;
   border-radius: 0.5rem;
+  max-height: 80vh;
+  overflow-y: scroll;
 }
 
 .bentoBox h3 {
@@ -20,3 +22,24 @@
   margin-bottom: 1rem;
 }
 
+@media only screen and (min-width: 768px) {
+  .bentoBox {
+    display: grid;
+    flex-grow: 1;
+    min-height: 0;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 1rem;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .bentoBox {
+    margin: auto;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 1200px;
+  }
+
+  .bentoBox > li:only-child {
+    height: fit-content;
+  }
+}

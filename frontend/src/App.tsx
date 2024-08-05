@@ -13,12 +13,18 @@ import {
 import appStyles from "./App.module.css";
 import logo from "/logo.jpg";
 
+let firstTime = true;
+
 function App() {
-  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const uploadSuccess = !isLoading && !error && !firstTime;
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    setUploadSuccess(false);
+    firstTime = false;
+    setIsLoading(true);
+    setError(false);
+
     event.preventDefault();
     const formData = new FormData();
     formData.append("superliga", event.currentTarget["superliga"].files[0]);
@@ -30,9 +36,11 @@ function App() {
 
     if (!serverReply.ok) {
       setError(true);
+      setIsLoading(false);
       return;
     }
-    setUploadSuccess(true);
+    setIsLoading(false);
+    setError(false);
   }
 
   const requestObjects = {
@@ -61,13 +69,31 @@ function App() {
         </a>
       </nav>
       <BentoBox>
-        <BentoLoader title="Cargar archivo">
+        <BentoLoader
+          title={
+            isLoading
+              ? "Cargando..."
+              : error
+              ? "Error al cargar archivo"
+              : "Cargar archivo"
+          }
+        >
           <form onSubmit={handleSubmit}>
-            <input type="file" name="superliga" />
-            <button type="submit">Cargar</button>
-            {error && !uploadSuccess && (
-              <p>Ocurrió un error al cargar el archivo</p>
-            )}
+            <div>
+              <input
+                type="file"
+                accept=".csv"
+                name="superliga"
+                id="superliga"
+              />
+              <button type="submit" disabled={isLoading}>
+                {(!isLoading && uploadSuccess) || (!isLoading && error)
+                  ? "Volver a cargar"
+                  : isLoading && !error
+                  ? "Cargando..."
+                  : "Cargar"}
+              </button>
+            </div>
           </form>
         </BentoLoader>
         {uploadSuccess && (
@@ -93,7 +119,7 @@ function App() {
               render={nombresMasComunesDeEquipoRenderer}
             />
             <BentoItem
-              title="Promedio de edades por equipo, de mayor a menor"
+              title="Promedio de edades por equipo, de mayor a menor según # de miembros"
               requests={requestObjects.promedioEdadesLink}
               render={promedioEdadesRenderer}
             />

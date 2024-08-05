@@ -1,0 +1,32 @@
+.bentoLoader div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bentoLoader input::file-selector-button {
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  background-color: #3e4146;
+  color: white;
+  cursor: pointer;
+  border: none;
+}
+
+.bentoLoader button {
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  color: white;
+  cursor: pointer;
+  background-color: green;
+}
+
+.bentoLoader button:disabled {
+  background-color: gray;
+}
+
+.error button {
+  background-color: red;
+}

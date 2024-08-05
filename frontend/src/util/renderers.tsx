@@ -1,18 +1,26 @@
+import styles from "./renderers.module.css";
+
 export function poblacionTotalRenderer(data: any[]) {
-  return <p>{data}</p>;
+  return <p className={styles.shared}>{data} miembros</p>;
 }
 
 export function promedioEdadEquipoRenderer(data: any[]) {
   return (
-    <ul>
+    <ul className={`${styles.shared} ${styles.promedioEdadEquipo}`}>
       <li>
-        <p>Edad promedio: {data[0].promedioEdad}</p>
+        <p>
+          <span>Edad promedio:</span> {data[0].promedioEdad}
+        </p>
       </li>
       <li>
-        <p>Edad maxima: {data[0].maxEdad}</p>
+        <p>
+          <span>Edad maxima:</span> {data[0].maxEdad}
+        </p>
       </li>
       <li>
-        <p>Edad minima: {data[0].minEdad}</p>
+        <p>
+          <span>Edad minima:</span> {data[0].minEdad}
+        </p>
       </li>
     </ul>
   );
@@ -20,7 +28,7 @@ export function promedioEdadEquipoRenderer(data: any[]) {
 
 export function jovenesVidaResueltaRenderer(data: any[]) {
   return (
-    <table>
+    <table className={styles.jovenesVidaResuelta}>
       <thead>
         <tr>
           <th>Nombre</th>
@@ -43,11 +51,9 @@ export function jovenesVidaResueltaRenderer(data: any[]) {
 
 export function nombresMasComunesDeEquipoRenderer(data: any[]) {
   return (
-    <ol>
+    <ol className={styles.shared}>
       {data[0].map((nombre: string, key: number) => (
-        <li key={key}>
-          {key + 1}. {nombre}
-        </li>
+        <li key={key}>{nombre}</li>
       ))}
     </ol>
   );
@@ -55,10 +61,13 @@ export function nombresMasComunesDeEquipoRenderer(data: any[]) {
 
 export function promedioEdadesRenderer(data: any[]) {
   return (
-    <ul>
+    <ul className={`${styles.shared} ${styles.promedioEdades}`}>
       {data[0].map((info: any, key: number) => (
         <li key={key}>
-          <p>{info.equipo}</p>
+          <p className="equipo">
+            {info.equipo} <span>{info.cantidadMiembros} miembros</span>
+          </p>
+          <p>Edad promedio: {info.promedioEdad}</p>
           <p>Edad maxima: {info.maxEdad}</p>
           <p>Edad minima: {info.minEdad}</p>
         </li>
